@@ -8,6 +8,7 @@ async function register(req, res, next) {
     const user = await registerUser(req.body);
     res.status(201).json(user);
   } catch (err) {
+    
     next(err);
   }
 }
