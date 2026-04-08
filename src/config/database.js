@@ -8,7 +8,7 @@ const {
     DB_NAME,
     DB_USER,
     DB_PASSWORD 
-} = require("../config/env");
+} = require("./env");
 
 let pool;
 // Create a new PostgreSQL connection pool
@@ -29,15 +29,28 @@ if  (process.env.DATABASE_URL) {
     });
 }
 
-pool.on("connect", () => {
-    logInfo("Connected to the PostgreSQL database");
-});
+// pool.on("connect", () => {
+//     logInfo("Connected to the PostgreSQL database");
+// });
 
 
-pool.on("error", (err) => {
-    logError("Unexpected PostGresSQL error", err);
-    process.exit(-1);
-});
+// pool.on("error", (err) => {
+//     logError("Unexpected PostGresSQL error", err);
+//     process.exit(-1);
+// });
+
+async function connectDB() {
+  try {
+    await pool.query("SELECT 1");
+    logInfo("PostgreSQL connected");
+  } catch (err) {
+    logError("❌ DB connection failed", err);
+    process.exit(1);
+  }
+}
+
+connectDB();
+
 
 // Export the pool for use in other modules
-module.exports = { pool };
+module.exports = pool;

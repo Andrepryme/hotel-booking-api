@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(cors());
 
 const { NODE_ENV } = require("./config/env");
+const AppError = require("./utils/appError");
 const { logError, logInfo } = require("./utils/logger");
 
 // Development logging middleware
@@ -41,10 +42,20 @@ app.use((req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  logError(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error",
+  logError(err);
+
+  // Known operational errors
+  if (err.isOperational) {
+    return res.status(err.statusCode).json({
+      status: "error",
+      message: err.message,
+    });
+  }
+
+  // Unknown errors
+  return res.status(500).json({
+    status: "error",
+    message: "Something went wrong",
   });
 });
-
 module.exports = app;
