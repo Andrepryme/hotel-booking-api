@@ -17,7 +17,7 @@ async function registerUser({ name, email, password }) {
   return await createUser({ id, name, email, passwordHash });
 }
 
-async function loginUser(email, password) {
+async function loginUser({ email, password }) {
   // Find user by email
   const findEmail = await findUserByEmail(email);
   if (!findEmail) {

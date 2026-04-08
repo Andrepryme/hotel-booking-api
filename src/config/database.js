@@ -16,7 +16,7 @@ if  (process.env.DATABASE_URL) {
     // Production
     pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false, },
+    ssl: { rejectUnauthorized: false },
     });
 } else {
     // Development
@@ -28,16 +28,6 @@ if  (process.env.DATABASE_URL) {
         password: DB_PASSWORD
     });
 }
-
-// pool.on("connect", () => {
-//     logInfo("Connected to the PostgreSQL database");
-// });
-
-
-// pool.on("error", (err) => {
-//     logError("Unexpected PostGresSQL error", err);
-//     process.exit(-1);
-// });
 
 async function connectDB() {
   try {
@@ -51,6 +41,4 @@ async function connectDB() {
 
 connectDB();
 
-
-// Export the pool for use in other modules
 module.exports = pool;

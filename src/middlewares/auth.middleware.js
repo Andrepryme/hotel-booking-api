@@ -1,33 +1,42 @@
 const { verifyToken } = require("../utils/jwt");
 const AppError = require("../utils/appError");
+const logger = require("../utils/logger");
 
+// Authentication middleware
 function authenticate(req, res, next) {
   let token;
 
-  // Check if Authorization header exists
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
-    // 2. Extract token
+
     token = req.headers.authorization.split(" ")[1];
   }
 
-  // 3. If no token
   if (!token) {
     return next(new AppError("Not authorized, no token", 401));
   }
 
   try {
-    // 4. Verify token
+
     const decoded = verifyToken(token);
+    if (!decoded) {
+      logger.logInfo("Token verification failed");
+      return next(new AppError("Authentication failed", 401));
+    }
 
-    // 5. Attach user info to request
     req.user = decoded;
-
     next();
+
   } catch (err) {
-    return next(new AppError("Invalid or expired token", 401));
+    if (err.name === "TokenExpiredError") {
+      logger.logInfo("Session expired");
+      return next(new AppError("Session expired, please login", 401));
+    }
+
+    logger.logError("AUTH ERROR", err);
+    return next(new AppError("Authentication failed", 401))
   }
 }
 

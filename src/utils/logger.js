@@ -5,10 +5,13 @@ function logInfo(message) {
     }
 }
 // Logs error messages
-function logError(message, error) {
-        console.error(message, error);
+function logError(message, error = null) {
+  if (process.env.NODE_ENV === "development" && error) {
+    console.error(`ERROR: ${message}`, error);
+  } else {
+    console.error(`ERROR: ${message}`);
+  }
 }
-
 // Export the logging functions
 module.exports = {
     logInfo,

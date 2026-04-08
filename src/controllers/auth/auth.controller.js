@@ -14,7 +14,7 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
   try {
-    const data = await loginUser(req.body.email, req.body.password);
+    const data = await loginUser(req.body);
     res.json(data);
   } catch (err) {
     next(err);
