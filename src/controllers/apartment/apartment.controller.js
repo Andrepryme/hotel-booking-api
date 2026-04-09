@@ -1,5 +1,6 @@
 const {
   createApartmentService,
+  advancedGetApartmentsService,
   getApartmentsService,
   getApartmentByIdService,
 } = require("../../services/apartment/apartment.service");
@@ -20,7 +21,7 @@ async function createApartment(req, res, next) {
 
 async function getApartments(req, res, next) {
   try {
-    const data = await getApartmentsService(req.query);
+    const data = await advancedGetApartmentsService(req.query);
     res.json(data);
   } catch (err) {
     next(err);

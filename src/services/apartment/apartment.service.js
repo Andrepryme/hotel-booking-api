@@ -5,6 +5,8 @@ const {
   createApartment,
   insertImages,
   getApartments,
+  advancedGetApartments,
+  countApartments,
   getApartmentById,
 } = require("../../repositories/apartment/apartment.repository");
 
@@ -30,6 +32,36 @@ async function createApartmentService(data, files, userId) {
   }
 
   return apartment;
+}
+
+async function advancedGetApartmentsService(query) {
+  const page = parseInt(query.page) || 1;
+  const limit = parseInt(query.limit) || 10;
+  const offset = (page - 1) * limit;
+
+  const filters = {
+    location: query.location,
+    minPrice: query.minPrice,
+    maxPrice: query.maxPrice,
+    bedrooms: query.bedrooms,
+  };
+
+  const sort = query.sort;
+
+  const [apartments, total] = await Promise.all([
+    advancedGetApartments({ limit, offset, filters, sort }),
+    countApartments(filters),
+  ]);
+
+  return {
+    data: apartments,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
 
 async function getApartmentsService(query) {
@@ -58,6 +90,7 @@ async function getApartmentByIdService(id) {
 
 module.exports = {
   createApartmentService,
+  advancedGetApartmentsService,
   getApartmentsService,
   getApartmentByIdService,
 };
