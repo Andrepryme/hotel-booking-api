@@ -1,18 +1,17 @@
-// Logs informational messages
-function logInfo(message) {
-    if (process.env.NODE_ENV !== "production") {
-        console.log(`INFO: ${message}`);
-    }
-}
-// Logs error messages
 function logError(message, error = null) {
-  if (process.env.NODE_ENV === "development" && error) {
-    console.error(`ERROR: ${message}`, error);
-  } else {
-    console.error(`ERROR: ${message}`);
+  console.error(`[${new Date().toISOString()}] ${message}`);
+
+  if (error && process.env.NODE_ENV !== "production") {
+    console.error(error.stack);
   }
 }
-// Export the logging functions
+
+function logInfo(message) {
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[${new Date().toISOString()}] INFO: ${message}`);
+  }
+}
+
 module.exports = {
     logInfo,
     logError

@@ -1,6 +1,6 @@
 const { body, validationResult } = require("express-validator");
 
-const createApartmentValidator = [
+const apartmentValidator = [
   body("title")
   .notEmpty()
   .withMessage("Title is required"),
@@ -46,6 +46,6 @@ function validate(req, res, next) {
 }
 
 module.exports = {
-  createApartmentValidator,
+  apartmentValidator,
   validate,
 };

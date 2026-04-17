@@ -6,22 +6,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const { NODE_ENV } = require("./config/env");
-const AppError = require("./utils/appError");
 const logger = require("./utils/logger");
 
-// Development logging middleware
-if (NODE_ENV !== "production") {
-    app.use((req, res, next) => {
-        logger.logInfo(`${req.method} ${req.originalUrl}`);
-        next();
-    });
-}
-
+app.use((req, res, next) => {
+    logger.logInfo(`${req.method} ${req.originalUrl}`);
+    next();
+});
 
 // Importing routes
-const authRoutes = require("./routes/auth/auth.routes");
-const apartmentRoutes = require("./routes/apartment/apartment.routes");
+const authRoutes = require("./routes/auth/auth.route");
+const apartmentRoutes = require("./routes/apartment/apartment.route");
 // const bookingRoutes = require("./routes/bookings/booking.routes");
 
 // Mounting routes
@@ -43,7 +37,8 @@ app.use((req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  if (process.env.NODE_ENV === "development") {
+  // Debbuging errors
+  if (process.env.NODE_ENV !== "production") {
     logger.logError(err.message, err);
   } else {
     logger.logError(err.message);
@@ -52,15 +47,13 @@ app.use((err, req, res, next) => {
   // Known errors
   if (err.isOperational) {
     return res.status(err.statusCode).json({
-      status: "error",
+      status: err.statusCode,
       message: err.message,
     });
   }
 
   // Unknown errors
-  return res.status(500).json({
-    status: "error",
-    message: "Something went wrong",
-  });
+  return res.status(500).json({message: "Internal Server Error",});
 });
+
 module.exports = app;

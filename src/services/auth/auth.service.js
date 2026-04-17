@@ -14,7 +14,7 @@ async function registerUser({ name, email, password }) {
   const id = uuidv4();
   const passwordHash = await hashPassword(password);
 
-  return await createUser({ id, name, email, passwordHash });
+  return await createUser( id, name, email, passwordHash );
 }
 
 async function loginUser({ email, password }) {
@@ -32,7 +32,6 @@ async function loginUser({ email, password }) {
   // Generate JWT token
   const token = generateToken({
     userId: findEmail.id,
-    role: findEmail.role,
   });
 
   return {
@@ -40,7 +39,6 @@ async function loginUser({ email, password }) {
     user: {
       id: findEmail.id,
       email: findEmail.email,
-      role: findEmail.role,
     },
   };
 }

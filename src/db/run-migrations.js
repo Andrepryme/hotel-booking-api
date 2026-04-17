@@ -3,7 +3,7 @@ const fs = require("fs");
 // Path handles file path safely accross Oses
 const path = require("path");
 // Database connection
-const pool = require("./database");
+const pool = require("../config/database");
 
 async function runMigrations() {
   const client = await pool.connect();
