@@ -1,7 +1,7 @@
 const pool = require("../config/database");
 const logger = require("../utils/logger");
 const { v4: uuidv4 } = require("uuid");
-const { hashPassword } = require("../utils/hash");
+const { hashThis } = require("../utils/hash");
 
 
 const seedRoles = require("./seeds/roles.seed");
@@ -42,7 +42,7 @@ async function runSeed() {
     const userId = uuidv4();
     const name = "John Doe";
     const email = "user@example.com";
-    const password = await hashPassword("user123", 10);
+    const password = await hashThis("user123", 10);
     await seedUsers(client, userId, name, email, password);
     logger.logInfo("User permissions created.");
     

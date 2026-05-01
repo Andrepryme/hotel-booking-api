@@ -49,33 +49,6 @@ async function insertImages(images) {
   await pool.query(query, values);
 }
 
-// async function getApartments({ limit, offset, filters }) {
-//   let baseQuery = `SELECT * FROM apartments WHERE 1=1`;
-//   let values = [];
-//   let index = 1;
-
-//   if (filters.location) {
-//     baseQuery += ` AND location ILIKE $${index++}`;
-//     values.push(`%${filters.location}%`);
-//   }
-
-//   if (filters.minPrice) {
-//     baseQuery += ` AND price >= $${index++}`;
-//     values.push(filters.minPrice);
-//   }
-
-//   if (filters.maxPrice) {
-//     baseQuery += ` AND price <= $${index++}`;
-//     values.push(filters.maxPrice);
-//   }
-
-//   baseQuery += ` LIMIT $${index++} OFFSET $${index++}`;
-//   values.push(limit, offset);
-
-//   const res = await pool.query(baseQuery, values);
-//   return res.rows;
-// }
-
 async function getApartments({ limit, offset, filters, sort }) {
   let values = [];
   let index = 1;
@@ -163,15 +136,6 @@ async function countApartments(filters) {
   return parseInt(res.rows[0].count);
 }
 
-// async function getApartmentById(id) {
-//   const res = await pool.query(
-//     "SELECT * FROM apartments WHERE id = $1",
-//     [id]
-//   );
-
-//   return res.rows[0];
-// }
-
 async function getApartmentById(id) {
   const query = `
     SELECT 
@@ -193,6 +157,15 @@ async function getApartmentById(id) {
   `;
 
   const res = await pool.query(query, [id]);
+
+  return res.rows[0];
+}
+
+async function getApartmentOwner(id) {
+  const res = await pool.query(
+    "SELECT created_by FROM apartments WHERE id = $1",
+    [id]
+  );
 
   return res.rows[0];
 }
@@ -290,6 +263,7 @@ module.exports = {
   getApartments,
   countApartments,
   getApartmentById,
+  getApartmentOwner,
   updateApartment,
   getImagesByApartmentId,
   getImageById,

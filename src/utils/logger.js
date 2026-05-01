@@ -1,6 +1,5 @@
 function logError(message, error = null) {
   console.error(`[${new Date().toISOString()}] ${message}`);
-
   if (error && process.env.NODE_ENV !== "production") {
     console.error(error.stack);
   }

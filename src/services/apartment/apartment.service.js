@@ -7,6 +7,7 @@ const {
   getApartments,
   countApartments,
   getApartmentById,
+  getApartmentOwner,
   updateApartment,
   getImagesByApartmentId,
   getImageById,
@@ -76,30 +77,6 @@ async function getApartmentsService(query) {
   };
 }
 
-// async function getApartmentsService(query) {
-//   const page = parseInt(query.page) || 1;
-//   const limit = parseInt(query.limit) || 10;
-//   const offset = (page - 1) * limit;
-
-//   const filters = {
-//     location: query.location,
-//     minPrice: query.minPrice,
-//     maxPrice: query.maxPrice,
-//   };
-
-//   return getApartments({ limit, offset, filters });
-// }
-
-// async function getApartmentByIdService(id) {
-//   const apartment = await getApartmentById(id);
-
-//   if (!apartment) {
-//     throw new AppError("Apartment not found", 404);
-//   }
-
-//   return apartment;
-// }
-
 async function getApartmentByIdService(id) {
   const apartment = await getApartmentById(id);
 
@@ -110,14 +87,16 @@ async function getApartmentByIdService(id) {
   return apartment;
 }
 
-async function updateApartmentService(id, data) {
+async function updateOwnApartmentService(id, data, user) {
   try {
-    const updated = await updateApartment(id, data);
-
-    if (!updated) {
+    const apartment = await getApartmentOwner(id);
+    if (!apartment) {
       throw new AppError("Apartment not found", 404);
     }
-
+    if (apartment.created_by !== user) {
+      throw new AppError("Forbidden: not your apartment", 403);
+    }
+    const updated = await updateApartment(id, data);
     return updated;
   } catch (err) {
     dbCodeTranslate(err.code);
@@ -125,7 +104,16 @@ async function updateApartmentService(id, data) {
   }
 }
 
-async function addImagesService(id, files) {
+async function addImagesService(id, files, user) {
+  
+  const apartment = await getApartmentOwner(id);
+  if (!apartment) {
+    throw new AppError("Apartment not found", 404);
+  }
+  if (apartment.created_by !== user) {
+    throw new AppError("Forbidden: not your apartment", 403);
+  }
+
   if (!files || !files.length) {
     throw new AppError("No images provided", 400);
   }
@@ -141,27 +129,38 @@ async function addImagesService(id, files) {
   return { message: "Images added successfully" };
 }
 
-async function deleteImageService(imageId) {
+async function deleteImageService(imageId, user) {
   const image = await getImageById(imageId);
   if (!image) {
     throw new AppError("Image not found", 404);
   }
-  await deleteFile(image.image_url);
+  const apartment = await getApartmentOwner(image.apartment_id);
+  if (!apartment) {
+    throw new AppError("Apartment not found", 404);
+  }
+  if (apartment.created_by !== user) {
+    throw new AppError("Forbidden: not your apartment", 403);
+  }
+  try {
+    await deleteFile(image.image_url);
+  } catch (err) {  }
   await deleteImage(imageId);
-  
   return { message: "Image deleted" };
 }
 
-async function deleteApartmentService(id) {
+async function deleteApartmentService(id, user) {
+  const apartment = await getApartmentOwner(id);
+  if (!apartment) {
+    throw new AppError("Apartment not found", 404);
+  }
+  if (apartment.created_by !== user) {
+    throw new AppError("Forbidden: not your apartment", 403);
+  }
   const images = await getImagesByApartmentId(id);
   await Promise.all(
     images.map((img) => deleteFile(img.image_url))
   );
   const deleted = await deleteApartment(id);
-  if (!deleted) {
-    throw new AppError("Apartment not found", 404);
-  }
-
   return { message: "Apartment deleted" };
 }
 
@@ -169,7 +168,7 @@ module.exports = {
   createApartmentService,
   getApartmentsService,
   getApartmentByIdService,
-  updateApartmentService,
+  updateOwnApartmentService,
   addImagesService,
   deleteImageService,
   deleteApartmentService,

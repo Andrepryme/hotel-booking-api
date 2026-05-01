@@ -16,4 +16,22 @@ async function userHasPermission(userId, permissionName) {
 
     return result.rowCount > 0;
 }
-module.exports = userHasPermission;
+
+async function getUserRoleName(userId) {
+    const result = await pool.query(
+        `
+        SELECT r.name
+        FROM roles r
+        JOIN user_roles ur ON r.id = ur.role_id
+        WHERE ur.user_id = $1;
+        `,
+        [userId]
+    );
+
+    return result.rows[0].name;
+}
+
+module.exports = {
+    userHasPermission,
+    getUserRoleName
+};

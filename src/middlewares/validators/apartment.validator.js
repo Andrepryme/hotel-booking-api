@@ -6,7 +6,7 @@ const apartmentValidator = [
   .withMessage("Title is required"),
 
   body("price")
-    .isNumeric()
+    .isFloat({ min: 0 })
     .withMessage("Price must be a number"),
 
   body("location")

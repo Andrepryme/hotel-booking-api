@@ -1,12 +1,11 @@
-const userHasPermission = require("../repositories/rbac.repository");
+const { userHasPermission } = require("../repositories/rbac.repository");
 const AppError = require("../utils/appError");
 
 function authorize(permissionNames) {
   return async function (req, res, next) {
     try {
       const userId = req.user.userId;
-      
-      for (const thisPermission of permissionNames) {
+      for (const thisPermission of permissionNames) { 
         const allowed = await userHasPermission(userId, thisPermission);
         if (allowed) {
           req.matchedPermission = thisPermission;
@@ -16,7 +15,7 @@ function authorize(permissionNames) {
       return next(new AppError("Forbidden: insufficient permissions", 403));
 
     } catch (err) {
-      return next(new AppError("Authorization check failed", 500));
+      return next(new AppError("Authorization check failed hhh", 500));
     }
   };
 }

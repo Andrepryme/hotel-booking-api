@@ -1,9 +1,7 @@
 CREATE TABLE IF NOT EXISTS apartment_images (
     id UUID PRIMARY KEY,
-
     apartment_id UUID NOT NULL,
     image_url TEXT NOT NULL,
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_images_apartment

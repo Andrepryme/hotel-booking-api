@@ -1,25 +1,15 @@
-const { verifyToken } = require("../utils/jwt");
+const { verifyAccessToken } = require("../utils/jwt");
 const AppError = require("../utils/appError");
+const { logInfo } = require("../utils/logger");
 
 // Authentication middleware
 function authenticate(req, res, next) {
-  let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-
-    token = req.headers.authorization.split(" ")[1];
-  }
-
+  const token = req.cookies?.access_token;
   if (!token) {
     return next(new AppError("Authentication failed", 401));
   }
-
   try {
-
-    const decoded = verifyToken(token);
+    const decoded = verifyAccessToken(token);
     if (!decoded) {
       return next(new AppError("Authentication failed", 401));
     }

@@ -1,8 +1,13 @@
-CREATE TABLE inquiries (
+CREATE TABLE IF NOT EXISTS inquiries (
     id UUID PRIMARY KEY,
-    apartment_id UUID REFERENCES apartments(id),
-    name VARCHAR(100),
-    email VARCHAR(100),
-    message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    apartment_id UUID NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_inquiry_apartment
+        FOREIGN KEY (apartment_id)
+        REFERENCES apartments(id)
+        ON DELETE CASCADE
 );

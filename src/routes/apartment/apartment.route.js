@@ -5,7 +5,7 @@ const {
   createApartment,
   getApartments,
   getApartment,
-  updateApartment,
+  updateOwnApartment,
   addImages,
   deleteImage,
   deleteApartment,
@@ -21,9 +21,9 @@ router.post(
   "/",
   authenticate,
   authorize(['create']),
+  upload.array("images", 5),
   apartmentValidator,
   validate,
-  upload.array("images", 5),
   createApartment
 );
 
@@ -33,7 +33,7 @@ router.patch(
   authorize(['update_own']),
   apartmentValidator,
   validate,
-  updateApartment
+  updateOwnApartment
 );
 
 router.post(

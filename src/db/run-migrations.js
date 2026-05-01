@@ -9,6 +9,7 @@ async function runMigrations() {
   const client = await pool.connect();
 
   try {
+    await client.query("BEGIN");
     console.log("Running migrations...");
 
     // Ensure migrations table exists
@@ -41,8 +42,10 @@ async function runMigrations() {
       }
     }
 
+    await client.query("COMMIT");
     console.log("Migrations complete.");
   } catch (err) {
+    await client.query("ROLLBACK");
     console.error(err);
   } finally {
     client.release();
