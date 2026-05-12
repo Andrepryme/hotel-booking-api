@@ -33,14 +33,15 @@ A scalable backend API for apartment booking and reservation management built wi
 ```txt
 src/
 │
+├── config/
 ├── controllers/
-├── services/
+├── db/
+├── middlewares/
 ├── repositories/
 ├── routes/
-├── middleware/
-├── validators/
+├── services/
 ├── utils/
-└── database/
+uploads/
 ```
 
 ---
