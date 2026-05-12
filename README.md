@@ -50,7 +50,7 @@ src/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/Andrepryme/hotel-booking-api.git
 ```
 
 ## Install Dependencies
