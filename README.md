@@ -76,6 +76,9 @@ Create a `.env` file and add:
 PORT=5000
 DATABASE_URL=your_database_url
 JWT_SECRET=your_secret_key
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_SECRET=your_refresh_secret_key
+JWT_REFRESH_EXPIRES_IN=7d
 ```
 
 ---
@@ -83,8 +86,11 @@ JWT_SECRET=your_secret_key
 # Authentication Routes
 
 ```http
-POST /auth/register
-POST /auth/login
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+POST /api/auth/refresh
+GET /api/auth/check
 ```
 
 ---
@@ -92,10 +98,13 @@ POST /auth/login
 # Apartment Routes
 
 ```http
-GET /apartments
-POST /apartments
-PUT /apartments/:id
-DELETE /apartments/:id
+GET /api/apartment
+GET /api/apartment/:id
+POST /api/apartment/id
+PATCH /api/apartment
+POST /api/apartment/:id/images
+DELETE /api/apartment/images/:imageId
+DELETE /apartment/:id
 ```
 
 ---
@@ -103,8 +112,18 @@ DELETE /apartments/:id
 # Booking Routes
 
 ```http
-POST /bookings
-GET /bookings/:id
+POST /api/booking
+GET /api/booking
+PATCH /api/booking/:id/status
+```
+
+---
+
+# Inquiry Routes
+
+```http
+POST /api/inquiry
+GET /api/inquiry
 ```
 
 ---
