@@ -31,7 +31,7 @@ async function findOverlappingBookings(apartmentId, checkIn, checkOut) {
       (check_in >= $2 AND check_out <= $3)
     )
   `;
-  const result = await pool.query(query, [apartmentId,checkIn,checkOut]);
+  const result = await pool.query(query, [apartmentId, checkIn, checkOut]);
   return result.rows;
 }
 

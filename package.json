@@ -27,7 +27,8 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "pg": "^8.20.0",
-    "uuid": "^13.0.0"
+    "ua-parser-js": "^2.0.9",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

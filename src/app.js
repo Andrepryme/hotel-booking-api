@@ -1,13 +1,14 @@
 const express = require("express");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const hpp = require("hpp");
-const cors = require("cors");
+const helmet = require("helmet"); // Security headers
+const rateLimit = require("express-rate-limit"); // Rate limiting to prevent brute force attacks
+const hpp = require("hpp"); // Prevent HTTP parameter pollution
+const cors = require("cors"); // Enable CORS for specific origins
+const cookieParser = require("cookie-parser"); // Parse cookies
 
-const app = express();
-app.use(express.json());
-
-const logger = require("./utils/logger");
+const app = express(); // Create Express app
+app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser()); // Middleware to parse cookies
+app.use(hpp()); // Prevent HTTP parameter pollution
 
 // Security headers
 app.use(
@@ -15,14 +16,6 @@ app.use(
     crossOriginResourcePolicy: false,
   })
 );
-
-// Cookie parser
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
-
-// Prevent HTTP param pollution
-app.use(hpp());
-
 // Enable CORS and restrict to specific origin for better security
   app.use(
     cors({
@@ -30,7 +23,6 @@ app.use(hpp());
       credentials: true,
     })
   );
-
 // Prevent brute force
 app.use(
   rateLimit({
@@ -40,13 +32,24 @@ app.use(
   })
 );
 
-// Request logging
+// Logging middleware
+const logger = require("./utils/logger");
+// Log all incoming requests with method and URL
 app.use((req, res, next) => {
-  if (req.url.startsWith("/uploads")) {
-    logger.logInfo(`STATIC: ${req.method} ${req.url}`);
-  } else {
-    logger.logInfo(`${req.method} ${req.originalUrl}`);
-  }
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+
+    const url = req.url.startsWith("/uploads")
+      ? req.url
+      : req.originalUrl;
+
+    logger.logInfo(
+      `${req.method} ${url} ${res.statusCode} in ${duration}ms`
+    );
+  });
+
   next();
 });
 
@@ -70,7 +73,7 @@ app.get('/', (req, res) => {
 
 // 404 handler for undefined routes
 app.use((req, res) => {
-    logger.logError(`Route not found: ${req.originalUrl}`);
+    logger.logError(`Route not found: ${req.method} ${req.originalUrl}`);
     res.status(404).json({ error: "Route not found" });
 });
 

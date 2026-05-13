@@ -7,7 +7,7 @@ function logError(message, error = null) {
 
 function logInfo(message) {
   if (process.env.NODE_ENV !== "production") {
-    console.log(`[${new Date().toISOString()}] INFO: ${message}`);
+    console.log(`[${new Date().toUTCString()}] ${message}`);
   }
 }
 

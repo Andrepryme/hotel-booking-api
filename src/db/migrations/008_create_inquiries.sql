@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS inquiries (
         REFERENCES apartments(id)
         ON DELETE CASCADE
 );
+
+CREATE INDEX idx_inquiries_apartment_id ON inquiries(apartment_id);

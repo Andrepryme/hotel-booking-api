@@ -11,7 +11,7 @@ const {
   deleteApartment,
 } = require("../../controllers/apartment/apartment.controller");
 
-const authenticate = require("../../middlewares/auth.middleware");
+const { authenticate } = require("../../middlewares/auth.middleware");
 const authorize = require("../../middlewares/rbac.middleware");
 const { apartmentValidator, validate } = require("../../middlewares/validators/apartment.validator");
 const upload = require("../../middlewares/upload");

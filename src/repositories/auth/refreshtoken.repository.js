@@ -1,11 +1,11 @@
 const pool = require("../../config/database");
 
-async function createRefreshToken(id, userId, tokenHash, expiresAt) {
+async function createRefreshToken(id, userId, tokenHash, expiresAt, device_name, ip_address, user_agent) {
   const query = `
-    INSERT INTO refresh_tokens (id, user_id, token_hash, expires_at)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO refresh_tokens (id, user_id, token_hash, expires_at, device_name, ip_address, user_agent)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
   `;
-  const values = [id, userId, tokenHash, expiresAt];
+  const values = [id, userId, tokenHash, expiresAt, device_name, ip_address, user_agent];
   await pool.query(query, values);
 }
 
