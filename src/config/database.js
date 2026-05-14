@@ -40,5 +40,9 @@ async function connectDB() {
 }
 
 connectDB();
+console.time("db");
 
+await pool.query("SELECT NOW()");
+
+console.timeEnd("db");
 module.exports = pool;

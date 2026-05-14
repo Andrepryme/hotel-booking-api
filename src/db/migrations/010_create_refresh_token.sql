@@ -1,6 +1,9 @@
 CREATE TABLE IF NOT EXISTS refresh_tokens (
   id UUID PRIMARY KEY,
   user_id UUID NOT NULL,
+  device_name TEXT,
+  ip_address TEXT,
+  user_agent TEXT,
   token_hash TEXT NOT NULL,
   revoked BOOLEAN DEFAULT FALSE,
   expires_at TIMESTAMP NOT NULL,

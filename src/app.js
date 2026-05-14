@@ -4,7 +4,9 @@ const rateLimit = require("express-rate-limit"); // Rate limiting to prevent bru
 const hpp = require("hpp"); // Prevent HTTP parameter pollution
 const cors = require("cors"); // Enable CORS for specific origins
 const cookieParser = require("cookie-parser"); // Parse cookies
+const compression = require("compression");
 
+app.use(compression()); // Enable gzip compression for responses
 const app = express(); // Create Express app
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
