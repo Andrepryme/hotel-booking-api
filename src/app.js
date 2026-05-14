@@ -6,8 +6,9 @@ const cors = require("cors"); // Enable CORS for specific origins
 const cookieParser = require("cookie-parser"); // Parse cookies
 const compression = require("compression");
 
+const app = express(); // Create Express 
+
 app.use(compression()); // Enable gzip compression for responses
-const app = express(); // Create Express app
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 app.use(hpp()); // Prevent HTTP parameter pollution
