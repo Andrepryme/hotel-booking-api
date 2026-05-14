@@ -13,14 +13,12 @@ const {
 let pool;
 // Create a new PostgreSQL connection pool
 if  (process.env.DATABASE_URL) {
-  console.log("Using DATABASE_URL for PostgreSQL connection");
     // Production
     pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
     });
 } else {
-  console.log("Using individual DB config for PostgreSQL connection");
     // Development
     pool = new Pool({
         host: DB_HOST,
