@@ -1,5 +1,11 @@
 const pool  = require("../../config/database");
 
+console.time("db");
+
+await pool.query("SELECT NOW()");
+
+console.timeEnd("db");
+
 async function createUser( id, name, email, passwordHash ) {
     const client = await pool.connect();
     try {
