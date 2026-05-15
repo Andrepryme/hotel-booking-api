@@ -6,9 +6,7 @@ function logError(message, error = null) {
 }
 
 function logInfo(message) {
-  if (process.env.NODE_ENV !== "production") {
-    console.log(`[${new Date().toUTCString()}] ${message}`);
-  }
+  console.log(`[${new Date().toUTCString()}] ${message}`);
 }
 
 module.exports = {

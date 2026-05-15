@@ -8,6 +8,7 @@ const compression = require("compression");
 
 const app = express(); // Create Express 
 
+app.set("trust proxy", 1); // Trust first proxy for rate limiting and secure cookies
 app.use(compression()); // Enable gzip compression for responses
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
